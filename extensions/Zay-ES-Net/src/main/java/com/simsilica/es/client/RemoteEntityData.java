@@ -34,7 +34,6 @@
 
 package com.simsilica.es.client;
 
-import com.google.common.base.Objects;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.simsilica.es.ComponentFilter;
@@ -54,6 +53,7 @@ import com.simsilica.es.net.EntityDataMessage;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -178,7 +178,7 @@ public class RemoteEntityData implements EntityData {
         // sent the elevant information it it were an add.  We potentially need to
         // implement a RemoteEntitySet from scratch that is a thinner/dumber client. 
 
-System.out.println("RemoteEntityData.getComponent(" + entityId + ", " + type + ")");
+//System.out.println("RemoteEntityData.getComponent(" + entityId + ", " + type + ")");
         // This call can happen quite frequently as part of change processing
         // and in some cases it's wasteful.  For example, two EntitySets with
         // Position and ModelType components but one is filtering for a specific
@@ -253,7 +253,7 @@ System.out.println("RemoteEntityData.getComponent(" + entityId + ", " + type + "
         if( log.isTraceEnabled() ) {
             log.trace("getEntity(" + entityId + ", " + Arrays.asList(types) + ")", new Throwable());
         }
-log.info("getEntity(" + entityId + ", " + Arrays.asList(types) + ")", new Throwable());
+//log.info("getEntity(" + entityId + ", " + Arrays.asList(types) + ")", new Throwable());
         // Ignore caching for the moment...
         
         // Need to fetch the entity
@@ -630,7 +630,7 @@ log.info("getEntity(" + entityId + ", " + Arrays.asList(types) + ")", new Throwa
                 if( type != change.getComponentType() ) {
                     continue;
                 }
-                if( !Objects.equal(id, change.getEntityId() ) ) {
+                if( !Objects.equals(id, change.getEntityId() ) ) {
                     continue;
                 }
                 result = (T)change.getComponent();

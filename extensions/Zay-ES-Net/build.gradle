@@ -1,0 +1,52 @@
+apply plugin: 'java'
+
+version='1.3.1-alpha1'
+
+ext {
+    bintrayLabels = ['jMonkeyEngine', 'gamedev', 'Entity System', 'networking']
+    releaseDescription = "Zay-ES Net ${project.version}"    
+    releaseVcsTag = "${project.name}-v${project.version}"    
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile rootProject
+    compile "org.jmonkeyengine:jme3-networking:3.1.+"
+    compile 'org.slf4j:slf4j-api:1.7.13'
+}
+
+
+
+// *** For some reason, this can't be injected from the root project
+//     or it picks up the root project sources instead of the subproject
+//     and doesn't even produce main jars.
+// Configuration to produce maven-repo style -sources and -javadoc jars
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+    exclude '**/.backups' 
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+
+// Put this at the end or it won't pick up the project.version and stuff
+// ...thus it also can't be injected.  But that means we can also be selective
+// about the sub-projects that we release.
+if( project.hasProperty('releaseUser') ) {
+    apply plugin: 'com.jfrog.bintray'
+    apply from: rootProject.file('release.gradle')
+}
+
+
